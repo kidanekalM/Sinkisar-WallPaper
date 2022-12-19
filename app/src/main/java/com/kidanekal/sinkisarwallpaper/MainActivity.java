@@ -9,11 +9,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent i) {
-                Toast.makeText(c, "A toast!", Toast.LENGTH_LONG).show();
+                ChangeWallPaper();
+                Toast.makeText(c, "Change", Toast.LENGTH_LONG).show();
             }
         };
         registerReceiver(br, new IntentFilter("com.kidanekal.sinksarwallpaper") );
@@ -32,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent changeWallPaper = PendingIntent.getBroadcast( this, 0, new Intent("com.kidanekal.sinksarwallpaper"),0);
 
         AlarmManager alarmManager =(AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC, 0,100,changeWallPaper);
+        alarmManager.setInexactRepeating(AlarmManager.RTC, 0,AlarmManager.INTERVAL_DAY,changeWallPaper);
     }
     // TODO ChangeWallpaper
     void ChangeWallPaper()
@@ -41,19 +46,34 @@ public class MainActivity extends AppCompatActivity {
         try {
             // set the wallpaper by calling the setResource function and
             // passing the drawable file
-            // todo
-            long day = GetEthiopianDate();
-            String picture = "Day"+day+".jpg";
-            wallpaperManager.setResource(+ R.drawable.ic_launcher_background);
-        } catch (IOException e) {
-            // here the errors can be logged instead of printStackTrace
-            e.printStackTrace();
+            // todo Get by id
+            long number = GetEthiopianDate();
+            String name = "day"+number;
+            int id = getResources().getIdentifier(name,"drawable", getApplication().getPackageName());
+
+            wallpaperManager.setResource(+ id);
+        }
+        catch (IOException e) {
+            Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
+            //e.printStackTrace();
         }
     }
     // TODO GetEthiopianDate
     long GetEthiopianDate()
     {
-        return 1;
+        Date TodayInMills =  new Date();
+        long September11 =  21859200000L / AlarmManager.INTERVAL_DAY;
+        long Today = TodayInMills.getTime() / AlarmManager.INTERVAL_DAY;
+        long TodayInEthiopia = ( Today - September11 ) / 30;
+
+        if (TodayInEthiopia == 0)
+        {
+            return 30;
+        }
+        else
+        {
+            return TodayInEthiopia;
+        }
     }
 
 }
