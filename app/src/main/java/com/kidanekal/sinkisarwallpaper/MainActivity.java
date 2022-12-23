@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
+import android.icu.util.TimeZone;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,8 +29,13 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent i) {
-                ChangeWallPaper();
-                Toast.makeText(c, "Change", Toast.LENGTH_LONG).show();
+                //ChangeWallPaper();
+                long diff = 968112000000L % AlarmManager.INTERVAL_DAY;
+                long diff2 = 968176800000L % AlarmManager.INTERVAL_DAY;
+                long today = System.currentTimeMillis()%AlarmManager.INTERVAL_DAY;
+                today = today/AlarmManager.INTERVAL_HOUR;
+                Toast.makeText(c,  today+" ዛሬ ቀኑ "+GetEthiopianDate()+" ነው", Toast.LENGTH_LONG).show();
+
             }
         };
         registerReceiver(br, new IntentFilter("com.kidanekal.sinksarwallpaper") );
@@ -37,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent changeWallPaper = PendingIntent.getBroadcast( this, 0, new Intent("com.kidanekal.sinksarwallpaper"),0);
 
         AlarmManager alarmManager =(AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC, 0,AlarmManager.INTERVAL_DAY,changeWallPaper);
+        alarmManager.setInexactRepeating(AlarmManager.RTC, 0,/*AlarmManager.INTERVAL_DAY*/10,changeWallPaper);
     }
     // TODO ChangeWallpaper
     void ChangeWallPaper()
@@ -58,21 +64,42 @@ public class MainActivity extends AppCompatActivity {
             //e.printStackTrace();
         }
     }
-    // TODO GetEthiopianDate
     long GetEthiopianDate()
     {
-        Date TodayInMills =  new Date();
-        long September11 =  21859200000L / AlarmManager.INTERVAL_DAY;
-        long Today = TodayInMills.getTime() / AlarmManager.INTERVAL_DAY;
-        long TodayInEthiopia = ( Today - September11 ) / 30;
+        /** long sep11 = 21772800000L == Meskerem 1*/
+        long sep10 = 21853347000L;
+
+        /** 1972 January 1*/
+        long leapYr = 63152547000L;
+
+        /** One Year is 365.25 days */
+        long oneYear = 31557600000L;
+
+        /** 937088547000 = 6 972080547000 = 10 968192547000 = 30 System.currentTimeMillis(); */
+        long today = System.currentTimeMillis();
+
+        long TodayInEthiopia  = ((today - sep10) % oneYear)/ AlarmManager.INTERVAL_DAY;
 
         if (TodayInEthiopia == 0)
         {
-            return 30;
+            if ( ( (today-leapYr) / oneYear ) % 4 == 3)
+                return 6;
+            else
+                return 5;
+        }
+        else if (TodayInEthiopia > 360)
+        {
+            return TodayInEthiopia - 360;
         }
         else
         {
-            return TodayInEthiopia;
+            TodayInEthiopia %= 30;
+
+            if (TodayInEthiopia == 0)
+                return 30;
+
+            else
+                return TodayInEthiopia;
         }
     }
 
