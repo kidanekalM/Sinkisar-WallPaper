@@ -29,21 +29,27 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent i) {
-                //ChangeWallPaper();
+                ChangeWallPaper();
+                /*
                 long diff = 968112000000L % AlarmManager.INTERVAL_DAY;
                 long diff2 = 968176800000L % AlarmManager.INTERVAL_DAY;
                 long today = System.currentTimeMillis()%AlarmManager.INTERVAL_DAY;
-                today = today/AlarmManager.INTERVAL_HOUR;
-                Toast.makeText(c,  today+" ዛሬ ቀኑ "+GetEthiopianDate()+" ነው", Toast.LENGTH_LONG).show();
+                //today = today/AlarmManager.INTERVAL_HOUR;
+                long remain = AlarmManager.INTERVAL_DAY - ( System.currentTimeMillis() % AlarmManager.INTERVAL_DAY );
+                remain /= AlarmManager.INTERVAL_HOUR;
+                today /= AlarmManager.INTERVAL_HOUR;
+                */
+                Toast.makeText(c,  " ዛሬ ቀኑ "+GetEthiopianDate()+" ነው", Toast.LENGTH_LONG).show();
 
             }
         };
         registerReceiver(br, new IntentFilter("com.kidanekal.sinksarwallpaper") );
 
         PendingIntent changeWallPaper = PendingIntent.getBroadcast( this, 0, new Intent("com.kidanekal.sinksarwallpaper"),0);
-
         AlarmManager alarmManager =(AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC, 0,/*AlarmManager.INTERVAL_DAY*/10,changeWallPaper);
+
+        long startingTime = AlarmManager.INTERVAL_DAY - ( System.currentTimeMillis() % AlarmManager.INTERVAL_DAY );
+        alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis()+startingTime,AlarmManager.INTERVAL_DAY,changeWallPaper);
     }
     // TODO ChangeWallpaper
     void ChangeWallPaper()
