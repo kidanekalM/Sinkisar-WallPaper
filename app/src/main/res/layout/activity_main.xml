@@ -2,21 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:backgroundTint="#000000"
     tools:context=".MainActivity">
-
-    <TextView
-        android:id="@+id/AboutMessage"
-        android:layout_width="339dp"
-        android:layout_height="43dp"
-        android:text="ይህ መተግበሪያ የስልክዎን ጀርባ በቀኑ በኣል ስዕል ይቀይረዋል።"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
 
     <ScrollView
         android:layout_width="411dp"
@@ -24,45 +13,28 @@
         android:layout_marginTop="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AboutMessage">
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="2dp"
             android:isScrollContainer="true"
             android:layoutMode="clipBounds"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/imageView9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/day21" />
+            <TextView
+                android:id="@+id/AboutMessage"
+                android:layout_width="339dp"
+                android:layout_height="43dp"
+                android:text="ይህ መተግበሪያ የስልክዎን ጀርባ በቀኑ በኣል ስዕል ይቀይረዋል።" />
 
             <ImageView
-                android:id="@+id/imageView10"
+                android:id="@+id/imageView2"
                 android:layout_width="match_parent"
-                android:layout_height="294dp"
-                android:isScrollContainer="true"
-                app:srcCompat="@drawable/day21" />
-
-            <ImageView
-                android:id="@+id/imageView11"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:isScrollContainer="true"
-                android:scrollbarAlwaysDrawHorizontalTrack="false"
-                android:scrollbarAlwaysDrawVerticalTrack="false"
-                app:srcCompat="@drawable/day23" />
-
-            <ImageView
-                android:id="@+id/imageView12"
-                android:layout_width="match_parent"
-                android:layout_height="115dp"
-                android:isScrollContainer="true"
+                android:layout_height="match_parent"
                 app:srcCompat="@drawable/day1" />
+
         </LinearLayout>
     </ScrollView>
 

@@ -14,6 +14,7 @@ import android.icu.util.TimeZone;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -26,10 +27,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         BroadcastReceiver br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent i) {
-                ChangeWallPaper();
+                System.out.println("Before Change wallpaper ");
+                ChangeWallPaper(GetEthiopianDate());
+
                 /*
                 long diff = 968112000000L % AlarmManager.INTERVAL_DAY;
                 long diff2 = 968176800000L % AlarmManager.INTERVAL_DAY;
@@ -45,35 +49,42 @@ public class MainActivity extends AppCompatActivity {
         };
         registerReceiver(br, new IntentFilter("com.kidanekal.sinksarwallpaper") );
 
-        PendingIntent changeWallPaper = PendingIntent.getBroadcast( this, 0, new Intent("com.kidanekal.sinksarwallpaper"),0);
+        PendingIntent changeWallPaper = PendingIntent.getBroadcast( this, 0, new Intent("com.kidanekal.sinksarwallpaper"),PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager =(AlarmManager) getSystemService(ALARM_SERVICE);
+        long startingTime =  System.currentTimeMillis() % AlarmManager.INTERVAL_DAY ;
+        // Toast.makeText(this, "Hours to days" + startingTime / AlarmManager.INTERVAL_HOUR, Toast.LENGTH_LONG).show();
+        ChangeWallPaper(GetEthiopianDate());
 
-        long startingTime = AlarmManager.INTERVAL_DAY - ( System.currentTimeMillis() % AlarmManager.INTERVAL_DAY );
-        alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis()+startingTime,AlarmManager.INTERVAL_DAY,changeWallPaper);
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis()-startingTime,AlarmManager.INTERVAL_DAY,changeWallPaper);
     }
-    // TODO ChangeWallpaper
-    void ChangeWallPaper()
+    // TODO ChangeWallpape
+    void ChangeWallPaper(long date)
     {
         final WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
         try {
             // set the wallpaper by calling the setResource function and
             // passing the drawable file
             // todo Get by id
-            long number = GetEthiopianDate();
-            String name = "day"+number;
+            System.out.println("Before Getting date");
+            //long number = GetEthiopianDate();
+            String name = "day"+ date;
+            ImageView pic = findViewById(R.id.imageView2);
+
             int id = getResources().getIdentifier(name,"drawable", getApplication().getPackageName());
+            pic.setImageDrawable(getResources().getDrawable(id));
 
             wallpaperManager.setResource(+ id);
         }
         catch (IOException e) {
-            Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
-            //e.printStackTrace();
+            Toast.makeText(this,"In change wallpaper "+e.getMessage(),Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
     long GetEthiopianDate()
     {
-        /** long sep11 = 21772800000L == Meskerem 1*/
-        long sep10 = 21853347000L;
+        /**long sep11 = 21853347000L; == Meskerem 1*/
+        long sep10 = 21772800000L;
 
         /** 1972 January 1*/
         long leapYr = 63152547000L;
